@@ -1,4 +1,4 @@
-import QtQuick 2.3
+import QtQuick 2.9
 
 
 Rectangle {
@@ -10,6 +10,7 @@ Rectangle {
     radius: height
     color: "transparent"
 
+    property string detail: "#7310A2"
     property int max: 0
     property int min: 0
     property int atual: 0
@@ -40,7 +41,7 @@ Rectangle {
         y: 0
         width: 0
         height: progress.height
-        color: "#7310A2"
+        color: detail
         radius: height
     }
 

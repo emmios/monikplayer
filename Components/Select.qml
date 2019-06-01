@@ -1,5 +1,6 @@
 //contents of List.qml
-import QtQuick 2.0
+import QtQuick 2.9
+
 
 Column {
 

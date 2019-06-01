@@ -2,10 +2,11 @@ TEMPLATE = app
 
 QT += core qml quick multimedia widgets multimediawidgets
 # widgets multimediawidgets
-CONFIG += c++11
+CONFIG += c++14
 
 SOURCES += main.cpp \
-    context.cpp
+    context.cpp \
+    singleapplication.cpp
 
 RESOURCES += qml.qrc \
     components.qrc
@@ -40,4 +41,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    context.h
+    context.h \
+    singleapplication.h

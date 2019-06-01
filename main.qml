@@ -1,8 +1,9 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtMultimedia 5.5
+import QtQuick 2.9
+import QtQuick.Controls 2.2
+import QtMultimedia 5.9
 import QtGraphicalEffects 1.0
 import "Components"
+
 
 AppCustom {
     id: main
@@ -11,12 +12,12 @@ AppCustom {
     y: 100
     width: 800
     height: 450//490
-    title: qsTr("Monikideos")
-    color: "#00000000";
+    title: qsTr("Synth-Player")
+    color: "#00000000"
     flags: Qt.FramelessWindowHint
 
     property string detail: "#007fff"
-    property string media: "file://" + Context.uri()
+    property string media: "file://" + Context.uri() 
 
     MouseArea {
         id: mouseMain
@@ -90,9 +91,9 @@ AppCustom {
             id: mediaPlayer
             source: media
             autoLoad: true
-            //loops: Audio.Infinite
+            loops: Context.loop() === 0 ? 0 : Audio.Infinite
             autoPlay: true
-            volume: 1
+            volume: 0.5
 
             onStatusChanged: {
                 if (status == MediaPlayer.EndOfMedia || status == MediaPlayer.Stopped) {
@@ -191,6 +192,7 @@ AppCustom {
         PropertyAnimation {id: animation5; target: timeLeft; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation6; target: timeRight; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation7; target: controller; property: "opacity"; to: 1; duration: 500}
+        PropertyAnimation {id: animation8; target: loop; property: "opacity"; to: 1; duration: 500}
 
         MouseArea {
             anchors.fill: parent
@@ -215,6 +217,9 @@ AppCustom {
                 animation7.to = 1
                 animation7.stop()
                 animation7.start()
+                animation8.to = 1
+                animation8.stop()
+                animation8.start()
             }
 
             onExited: {
@@ -239,6 +244,9 @@ AppCustom {
                 animation7.to = 0
                 animation7.stop()
                 animation7.start()
+                animation8.to = 0
+                animation8.stop()
+                animation8.start()
             }
         }
     }
@@ -291,6 +299,9 @@ AppCustom {
                 animation7.to = 1
                 animation7.stop()
                 animation7.start()
+                animation8.to = 1
+                animation8.stop()
+                animation8.start()
             }
 
             onExited: {
@@ -312,6 +323,9 @@ AppCustom {
                 animation7.to = 0
                 animation7.stop()
                 animation7.start()
+                animation8.to = 0
+                animation8.stop()
+                animation8.start()
             }
         }
     }
@@ -354,6 +368,7 @@ AppCustom {
         height: 6
         max: mediaPlayer.duration
         opacity: 0.0
+        detail: detail
 
         onClick: {
             mediaPlayer.seek(atual)
@@ -420,7 +435,7 @@ AppCustom {
         id: controller
         x: (timeRight.x + timeRight.width) - width
         y: timeRight.y + 40
-        position: 50
+        position: Context.volume()
         opacity: 0
         bg.opacity: 0.5
         detail: detail
@@ -428,6 +443,37 @@ AppCustom {
         onChange: {
             var valor = (value * 1) / 100
             mediaPlayer.volume = valor
+            Context.volume(value)
+        }
+    }
+
+    Label {
+        id: loop
+        x: progress.x - timeLeft.width - 8
+        y: timeRight.y + 32
+        text: "\uf0e2"
+        size: 14
+        opacity: 0.0
+        color: Context.loop() === 0 ? "#ffffff" : Context.detailColor()
+
+        property int activeLoop: Context.loop()
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+
+                if (loop.activeLoop == 0) {
+                    loop.activeLoop = 1
+                    loop.color = detail
+                    mediaPlayer.loops = Audio.Infinite
+                } else {
+                    loop.activeLoop = 0
+                    loop.color = "#ffffff"
+                    mediaPlayer.loops = 0
+                }
+
+                Context.loop(loop.activeLoop)
+            }
         }
     }
 
@@ -435,5 +481,13 @@ AppCustom {
         id: decoration
         win: main
         opacity: 0
+        detail: detail
+    }
+
+    Component.onCompleted: {
+        progress.detail = Context.detailColor()
+        controller.detail = progress.detail
+        decoration.detail = controller.detail
+        detail = progress.detail
     }
 }
