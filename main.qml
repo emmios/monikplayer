@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtMultimedia 5.9
 import QtGraphicalEffects 1.0
-import "Components"
+import "./Components"
 
 
 AppCustom {
@@ -13,7 +13,7 @@ AppCustom {
     width: 800
     height: 450//490
     title: qsTr("Synth-Player")
-    color: "#00000000"
+    color: "#000000"
     flags: Qt.FramelessWindowHint
 
     property string detail: "#007fff"
@@ -59,6 +59,7 @@ AppCustom {
         }
     }
 
+    /*
     Rectangle {
         id: bgWindow
         x: 0
@@ -66,7 +67,7 @@ AppCustom {
         anchors.fill: parent
         color: "#000"
         opacity: 0.5
-    }
+    }*/
 
     Rectangle {
         id: bg
@@ -76,6 +77,59 @@ AppCustom {
         anchors.topMargin: 0//25
         anchors.bottomMargin: 0
         color: "#000000"
+    }
+
+    Rectangle {
+        id: loading
+        visible: false
+        anchors.fill: parent
+
+        AnimatedImage {
+            id: animation
+            anchors.fill: parent
+            asynchronous: true
+            source: "qrc:/Resources/audio-animação.gif"
+        }
+
+        Rectangle {
+            property int frames: animation.frameCount
+
+            width: 4; height: 8
+            x: (animation.width - width) * animation.currentFrame / frames
+            y: animation.height
+            color: "#fff"
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#000000"
+            opacity: 0.5
+        }
+    }
+
+    Image {
+        id: musicIcon
+        anchors.centerIn: parent
+        source: "qrc:/Resources/music-solid.svg"
+        width: 60
+        height: 60
+        visible: false
+        antialiasing: true
+        smooth: true
+    }
+
+    ColorOverlay{
+        id: overlay
+        x: 20
+        y: 20
+        width: 60
+        height: 60
+        source: musicIcon
+        color: detail
+        antialiasing: true
+        smooth: true
+        visible: false
+        opacity: 0.4
     }
 
     VideoOutput {
@@ -193,6 +247,7 @@ AppCustom {
         PropertyAnimation {id: animation6; target: timeRight; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation7; target: controller; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation8; target: loop; property: "opacity"; to: 1; duration: 500}
+        PropertyAnimation {id: animation9; target: videoTitle; property: "opacity"; to: 0.8; duration: 500}
 
         MouseArea {
             anchors.fill: parent
@@ -220,6 +275,9 @@ AppCustom {
                 animation8.to = 1
                 animation8.stop()
                 animation8.start()
+                animation9.to = 0.1
+                animation9.stop()
+                animation9.start()
             }
 
             onExited: {
@@ -247,6 +305,9 @@ AppCustom {
                 animation8.to = 0
                 animation8.stop()
                 animation8.start()
+                animation9.to = 0
+                animation9.stop()
+                animation9.start()
             }
         }
     }
@@ -302,6 +363,9 @@ AppCustom {
                 animation8.to = 1
                 animation8.stop()
                 animation8.start()
+                animation9.to = 0.8
+                animation9.stop()
+                animation9.start()
             }
 
             onExited: {
@@ -314,6 +378,9 @@ AppCustom {
                 animation3.to = 0.0
                 animation3.stop()
                 animation3.start()
+                animation4.to = 0.0
+                animation4.stop()
+                animation4.start()
                 animation5.to = 0.0
                 animation5.stop()
                 animation5.start()
@@ -326,6 +393,9 @@ AppCustom {
                 animation8.to = 0
                 animation8.stop()
                 animation8.start()
+                animation9.to = 0
+                animation9.stop()
+                animation9.start()
             }
         }
     }
@@ -360,6 +430,15 @@ AppCustom {
         }
     }
 
+    Label {
+        id: videoTitle
+        x: (main.width / 2) - (width / 2)
+        y: 25
+        text: Context.uri().split('/')[Context.uri().split('/').length - 1]
+        size: 12
+        opacity: 0.0
+    }
+
     ProgressBar {
         id: progress
         x: 80
@@ -372,6 +451,18 @@ AppCustom {
 
         onClick: {
             mediaPlayer.seek(atual)
+        }
+
+        onMousexChanged: {
+            mediaPlayerPreview.seek(value)
+            mediaPlayerPreview.play()
+            mediaPlayerPreview.pause()
+            preview.x = (x + mousex) - (preview.width / 2)
+            preview.y = y - (preview.height + 10)
+
+            animation4.to = 1
+            animation4.stop()
+            animation4.start()
         }
 
         onHover: {
@@ -403,14 +494,10 @@ AppCustom {
             animation7.to = 1
             animation7.stop()
             animation7.start()
-
+            animation8.to = 1
+            animation8.stop()
+            animation8.start()
         }
-
-//        onMove: {
-//            mediaPlayerPreview.seek(value)
-//            mediaPlayerPreview.play()
-//            mediaPlayerPreview.pause()
-//        }
     }
 
     Label {
@@ -485,9 +572,23 @@ AppCustom {
     }
 
     Component.onCompleted: {
+
         progress.detail = Context.detailColor()
         controller.detail = progress.detail
         decoration.detail = controller.detail
         detail = progress.detail
+
+        if (media.indexOf(".mp3") != -1 ||
+            media.indexOf(".m4a") != -1 ||
+            media.indexOf(".ogg") != -1 ||
+            media.indexOf(".aac") != -1 ||
+            media.indexOf(".ac3") != -1 ||
+            media.indexOf(".wma") != -1) {
+            loading.visible = true
+            overlay.visible = true
+        } else {
+            loading.visible = false
+            overlay.visible = false
+        }
     }
 }

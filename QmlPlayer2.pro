@@ -2,16 +2,18 @@ TEMPLATE = app
 
 QT += core qml quick multimedia widgets multimediawidgets
 # widgets multimediawidgets
-CONFIG += c++14
+CONFIG += c++11
 
 SOURCES += main.cpp \
     context.cpp \
     singleapplication.cpp
 
 RESOURCES += qml.qrc \
-    components.qrc
+    components.qrc \
+    resources.qrc
 
 
+#QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 CONFIG += "GST_VERSION=1.0"
 PKGCONFIG +=  gstreamer-1.0
 
@@ -34,6 +36,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -5,8 +5,8 @@
 #include <QVideoWidget>
 #include <QWindow>
 #include <QObject>
-#include <QDebug>
-#include <QMetaObject>
+//#include <QDebug>
+//#include <QMetaObject>
 #include <QVariant>
 #include <QProcess>
 #include <QString>
@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
     singleApplication app(argc, argv);
 
     QDir dir;
-    QString path = dir.homePath() + "/.config/Synth/monikplayer/";
-    QFile file(path + "settings.txt");
+    QString path = dir.homePath() + "/.config/synth/monikplayer/";
+    QFile file(path + "settings.conf");
 
     if(!dir.exists(path))
     {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     if(!file.exists())
     {
         file.open(QIODevice::ReadWrite);
-        QSettings settings(path + "settings.txt", QSettings::NativeFormat);
+        QSettings settings(path + "settings.conf", QSettings::NativeFormat);
         settings.setValue("volume", 0.5);
         file.close();
     }
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     if(app.lock())
     {
         QProcess process;
-        QSettings settings(path + "settings.txt", QSettings::NativeFormat);
+        QSettings settings(path + "settings.conf", QSettings::NativeFormat);
         QString pro = settings.value("process").toString();
 
         QStringList args;
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        context.media = "/opt/monikvideos/resources/app/app/media/default.mp4";
+        context.media = path + "media/default.mp4";
     }
 
     QQmlApplicationEngine engine;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     app.setLock();
-    QSettings settings(path + "settings.txt", QSettings::NativeFormat);
+    QSettings settings(path + "settings.conf", QSettings::NativeFormat);
     settings.setValue("process", app.applicationPid());
 
     return app.exec();

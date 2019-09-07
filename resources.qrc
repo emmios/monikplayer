@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/music-solid.svg</file>
+	<file>Resources/audio-animação.gif</file>
+    </qresource>
+</RCC>
