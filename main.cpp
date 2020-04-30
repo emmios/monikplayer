@@ -5,8 +5,8 @@
 #include <QVideoWidget>
 #include <QWindow>
 #include <QObject>
-//#include <QDebug>
-//#include <QMetaObject>
+#include <QDebug>
+#include <QMetaObject>
 #include <QVariant>
 #include <QProcess>
 #include <QString>
@@ -15,14 +15,13 @@
 #include "context.h"
 #include "singleapplication.h"
 
-
 int main(int argc, char *argv[])
 {
     //QApplication app(argc, argv);
     singleApplication app(argc, argv);
 
     QDir dir;
-    QString path = dir.homePath() + "/.config/synth/monikplayer/";
+    QString path = dir.homePath() + "/.config/synth/synth-player/";
     QFile file(path + "settings.conf");
 
     if(!dir.exists(path))
@@ -38,40 +37,38 @@ int main(int argc, char *argv[])
         file.close();
     }
 
-    // Kill before instance
+    // Kill instance
     if(app.lock())
     {
-        QProcess process;
         QSettings settings(path + "settings.conf", QSettings::NativeFormat);
-        QString pro = settings.value("process").toString();
-
-        QStringList args;
-        args << pro;
-        process.start("kill", args);
-        process.waitForFinished();
-
-        settings.setValue("process", app.applicationPid());
-    }
-
-    Context context;
-    //context.media = "/home/shenoisz/Videos/Eletro/Borgeous - Wildfire (Official Music Video) OUT NOW.mp4";
-
-    if (argc >= 2)
-    {
-        context.media = argv[1];
+        settings.setValue("media", argv[1]);
+        return -1;
     }
     else
     {
-        context.media = path + "media/default.mp4";
+        Context *context = new Context();
+        if (argc >= 2)
+        {
+            context->media = argv[1];
+        }
+        else
+        {
+            context->media = path + "media/default.mp4";
+        }
+        //context->media = "/home/shenoisz/Vídeos/Eletro/Caramella girls - Caramelldansen Japanese video version.mp4";
+
+        QQmlApplicationEngine engine;
+        engine.rootContext()->setContextProperty("Context", context);
+        engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+        app.setLock();
+        QSettings settings(path + "settings.conf", QSettings::NativeFormat);
+        settings.setValue("media", context->media);
+
+        QObject *main = engine.rootObjects().first();
+        QWindow *window = qobject_cast<QWindow *>(main);
+        context->window = window;
+
+        return app.exec();
     }
-
-    QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("Context", &context);
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
-    app.setLock();
-    QSettings settings(path + "settings.conf", QSettings::NativeFormat);
-    settings.setValue("process", app.applicationPid());
-
-    return app.exec();
 }

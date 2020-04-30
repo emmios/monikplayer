@@ -10,6 +10,7 @@ Rectangle {
     radius: height
     color: "transparent"
 
+    property alias mouse: mouse
     property string detail: "#7310A2"
     property int max: 0
     property int min: 0
@@ -62,7 +63,7 @@ Rectangle {
     }
 
     MouseArea {
-
+        id: mouse
         anchors.fill: parent
         hoverEnabled: true
 

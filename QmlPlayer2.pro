@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += core qml quick multimedia widgets multimediawidgets
+QT += core qml quick multimedia widgets multimediawidgets x11extras
 # widgets multimediawidgets
 CONFIG += c++11
 
@@ -12,6 +12,7 @@ RESOURCES += qml.qrc \
     components.qrc \
     resources.qrc
 
+LIBS += -lX11
 
 #QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 CONFIG += "GST_VERSION=1.0"

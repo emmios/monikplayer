@@ -1,5 +1,55 @@
 #include "context.h"
 
+Context::Context()
+{
+    QDir dir;
+    this->path = dir.homePath() + "/.config/synth/synth-player/";
+}
+
+void Context::setMedia(QString media)
+{
+    QSettings settings(path + "settings.conf", QSettings::NativeFormat);
+    settings.setValue("media", media);
+}
+
+QString Context::verify()
+{
+    QSettings settings(this->path + "settings.conf", QSettings::NativeFormat);
+    return settings.value("media").toString();
+}
+
+int Context::windowMove(int x, int y, int w, int h)
+{
+    Display *d = XOpenDisplay(0);
+    Status status;
+    XEvent xevent;
+    Atom moveresize;
+
+    moveresize = XInternAtom(d, "_NET_MOVERESIZE_WINDOW", False);
+
+    if (!moveresize)
+    {
+        return -1;
+    }
+
+    if (y < 0) y = 0;
+
+    xevent.type = ClientMessage;
+    xevent.xclient.window = this->window->winId();
+    xevent.xclient.message_type = moveresize;
+    xevent.xclient.format = 32;
+    xevent.xclient.data.l[0] = StaticGravity | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11);
+    xevent.xclient.data.l[1] = x;
+    xevent.xclient.data.l[2] = y;
+    xevent.xclient.data.l[3] = w;
+    xevent.xclient.data.l[4] = h;
+
+    status = XSendEvent(d, DefaultRootWindow(d), False,
+                SubstructureNotifyMask | SubstructureRedirectMask, &xevent);
+
+    XCloseDisplay(d);
+    return status;
+}
 
 int Context::mouseX()
 {   
@@ -21,7 +71,7 @@ QString Context::uri()
 QString Context::detailColor()
 {
     QDir dir;
-    QSettings panel(dir.homePath() + "/.config/Synth/panel/settings.txt", QSettings::NativeFormat);
+    QSettings panel(dir.homePath() + "/.config/synth/panel/settings.conf", QSettings::NativeFormat);
     QString color = panel.value("color").toString();
     if (color.isEmpty()) color = "#007fff";
     return color;
@@ -29,28 +79,24 @@ QString Context::detailColor()
 
 int Context::volume()
 {
-    QDir dir;
-    QSettings video(dir.homePath() + "/.config/Synth/monikplayer/settings.txt", QSettings::NativeFormat);
+    QSettings video(this->path + "settings.conf", QSettings::NativeFormat);
     return video.value("volume").toInt();
 }
 
 void Context::volume(int value)
 {
-    QDir dir;
-    QSettings video(dir.homePath() + "/.config/Synth/monikplayer/settings.txt", QSettings::NativeFormat);
+    QSettings video(this->path + "settings.conf", QSettings::NativeFormat);
     video.setValue("volume", value);
 }
 
 int Context::loop()
 {
-    QDir dir;
-    QSettings video(dir.homePath() + "/.config/Synth/monikplayer/settings.txt", QSettings::NativeFormat);
+    QSettings video(this->path + "settings.conf", QSettings::NativeFormat);
     return video.value("loop").toInt();
 }
 
 void Context::loop(int value)
 {
-    QDir dir;
-    QSettings video(dir.homePath() + "/.config/Synth/monikplayer/settings.txt", QSettings::NativeFormat);
+    QSettings video(this->path + "settings.conf", QSettings::NativeFormat);
     video.setValue("loop", value);
 }

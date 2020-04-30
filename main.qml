@@ -6,15 +6,15 @@ import "./Components"
 
 
 AppCustom {
-    id: main
+    id: root
     visible: true
     x: 100
     y: 100
     width: 800
     height: 450//490
-    title: qsTr("Synth-Player")
+    title: qsTr("Synth Player")
     color: "#000000"
-    flags: Qt.FramelessWindowHint
+    flags: Qt.Window | Qt.FramelessWindowHint
 
     property string detail: "#007fff"
     property string media: "file://" + Context.uri() 
@@ -30,7 +30,7 @@ AppCustom {
         onDoubleClicked: {
 
             if (fullscreen) {
-                main.showFullScreen();
+                root.showFullScreen();
                 output.anchors.topMargin = 0
                 output.anchors.bottomMargin = 0
                 bg.anchors.topMargin = 0
@@ -38,7 +38,7 @@ AppCustom {
                 fullscreen = false
                 decoration.visible = false
             } else {
-                main.showNormal();
+                root.showNormal();
                 output.anchors.topMargin = 0//25
                 output.anchors.bottomMargin = 0
                 bg.anchors.topMargin = 0//25
@@ -51,11 +51,61 @@ AppCustom {
         onPressed: {
             startX = mouseX
             startY = mouseY
+            cursorShape = Qt.SizeAllCursor
+        }
+
+        onReleased: {
+            cursorShape = Qt.ArrowCursor
         }
 
         onMouseXChanged: {
-            main.x = Context.mouseX() - startX
-            main.y = Context.mouseY() - startY
+            root.x = Context.mouseX() - startX
+            root.y = Context.mouseY() - startY
+            Context.windowMove(root.x, root.y, root.width, root.height)
+        }
+    }
+
+    Timer {
+        running: true
+        interval: 1000
+        repeat: true
+        onTriggered: {
+            var title = Context.verify()
+            if (title !== titleArea.fullTitle) {
+                var url = "file://" + title
+
+                btn.text = "\uf28b"
+                btn.paused = true
+
+                mediaPlayer.source = url
+                mediaPlayerPreview.source = url
+                titleArea.fullTitle = title
+                titleArea.originalTitle = title
+                titleArea.titleSize()
+            }
+        }
+    }
+
+    DropArea {
+        id: dragTarget
+        anchors.fill: parent
+
+        property string url: ""
+
+        onEntered: {
+            url = drag.urls[0]
+        }
+        onDropped:
+        {
+            Context.setMedia(url)
+            mediaPlayer.source = url
+            mediaPlayerPreview.source = url
+            titleArea.fullTitle = url
+            titleArea.originalTitle = url
+            titleArea.titleSize()
+            //btn.text = "\uf144"
+            btn.text = "\uf28b"
+            btn.paused = true
         }
     }
 
@@ -234,9 +284,9 @@ AppCustom {
 
     Rectangle {
         id: bottomDeskt
-        width: main.width
-        height: main.height / 4
-        y: main.height - (main.height / 4)
+        width: root.width
+        height: root.height / 4
+        y: root.height - (root.height / 4)
         color: "transparent"
 
         PropertyAnimation {id: animation1; target: btn; property: "opacity"; to: 0.4; duration: 500}
@@ -249,153 +299,134 @@ AppCustom {
         PropertyAnimation {id: animation8; target: loop; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation9; target: videoTitle; property: "opacity"; to: 0.8; duration: 500}
 
+        function show() {
+            animation1.to = 0.4
+            animation1.stop()
+            animation1.start()
+            animation2.to = 0.7
+            animation2.stop()
+            animation2.start()
+            animation3.to = 0.7
+            animation3.stop()
+            animation3.start()
+            animation5.to = 0.7
+            animation5.stop()
+            animation5.start()
+            animation6.to = 0.7
+            animation6.stop()
+            animation6.start()
+            animation7.to = 0.7
+            animation7.stop()
+            animation7.start()
+            animation8.to = 0.7
+            animation8.stop()
+            animation8.start()
+            animation9.to = 0.7
+            animation9.stop()
+            animation9.start()
+        }
+
+        function hide() {
+            animation1.to = 0.0
+            animation1.stop()
+            animation1.start()
+            animation2.to = 0.0
+            animation2.stop()
+            animation2.start()
+            animation3.to = 0.0
+            animation3.stop()
+            animation3.start()
+            animation4.to = 0.0
+            animation4.stop()
+            animation4.start()
+            animation5.to = 0
+            animation5.stop()
+            animation5.start()
+            animation6.to = 0
+            animation6.stop()
+            animation6.start()
+            animation7.to = 0
+            animation7.stop()
+            animation7.start()
+            animation8.to = 0
+            animation8.stop()
+            animation8.start()
+            animation9.to = 0
+            animation9.stop()
+            animation9.start()
+        }
+
+        function customShow() {
+            animation1.to = 0.3
+            animation1.stop()
+            animation1.start()
+            animation2.to = 0.8
+            animation2.stop()
+            animation2.start()
+            animation3.to = 0.8
+            animation3.stop()
+            animation3.start()
+            animation5.to = 1
+            animation5.stop()
+            animation5.start()
+            animation6.to = 1
+            animation6.stop()
+            animation6.start()
+            animation7.to = 1
+            animation7.stop()
+            animation7.start()
+            animation8.to = 1
+            animation8.stop()
+            animation8.start()
+        }
+
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
 
             onHoveredChanged: {
-                animation1.to = 0.4
-                animation1.stop()
-                animation1.start()
-                animation2.to = 0.8
-                animation2.stop()
-                animation2.start()
-                animation3.to = 0.8
-                animation3.stop()
-                animation3.start()
-                animation5.to = 1
-                animation5.stop()
-                animation5.start()
-                animation6.to = 1
-                animation6.stop()
-                animation6.start()
-                animation7.to = 1
-                animation7.stop()
-                animation7.start()
-                animation8.to = 1
-                animation8.stop()
-                animation8.start()
-                animation9.to = 0.1
-                animation9.stop()
-                animation9.start()
+                bottomDeskt.show()
             }
 
             onExited: {
-                animation1.to = 0.0
-                animation1.stop()
-                animation1.start()
-                animation2.to = 0.0
-                animation2.stop()
-                animation2.start()
-                animation3.to = 0.0
-                animation3.stop()
-                animation3.start()
-                animation4.to = 0.0
-                animation4.stop()
-                animation4.start()
-                animation5.to = 0
-                animation5.stop()
-                animation5.start()
-                animation6.to = 0
-                animation6.stop()
-                animation6.start()
-                animation7.to = 0
-                animation7.stop()
-                animation7.start()
-                animation8.to = 0
-                animation8.stop()
-                animation8.start()
-                animation9.to = 0
-                animation9.stop()
-                animation9.start()
+                bottomDeskt.hide()
             }
         }
     }
 
     Label {
         id: btn
-        x: (main.width / 2) - (width / 2)
-        y: (main.height / 2) - (height / 2)
+        x: (root.width / 2) - (width / 2)
+        y: (root.height / 2) - (height / 2)
         text: "\uf28b"
-        size: main.width / 3
+        size: root.width / 3
         font.family: "Font Awesome 5 Free"
         opacity: 0.0
-
         property bool paused: true
-
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
 
             onClicked: {
-
-                if (parent.paused) {
-                    parent.text = "\uf144"
+                if (btn.paused) {
+                    btn.text = "\uf144"
                     mediaPlayer.pause()
 
                 } else {
                     parent.text = "\uf28b"
                     mediaPlayer.play()
                 }
-
-                parent.paused = !parent.paused
+                btn.paused = !btn.paused
             }
 
             onHoveredChanged: {
-                animation1.to = 0.4
-                animation1.stop()
-                animation1.start()
-                animation2.to = 0.8
-                animation2.stop()
-                animation2.start()
-                animation3.to = 0.8
-                animation3.stop()
-                animation3.start()
-                animation5.to = 1
-                animation5.stop()
-                animation5.start()
-                animation6.to = 1
-                animation6.stop()
-                animation6.start()
-                animation7.to = 1
-                animation7.stop()
-                animation7.start()
-                animation8.to = 1
-                animation8.stop()
-                animation8.start()
-                animation9.to = 0.8
-                animation9.stop()
-                animation9.start()
+                bottomDeskt.show()
+                cursorShape = Qt.PointingHandCursor
             }
 
             onExited: {
-                animation1.to = 0.0
-                animation1.stop()
-                animation1.start()
-                animation2.to = 0.0
-                animation2.stop()
-                animation2.start()
-                animation3.to = 0.0
-                animation3.stop()
-                animation3.start()
-                animation4.to = 0.0
-                animation4.stop()
-                animation4.start()
-                animation5.to = 0.0
-                animation5.stop()
-                animation5.start()
-                animation6.to = 0.0
-                animation6.stop()
-                animation6.start()
-                animation7.to = 0
-                animation7.stop()
-                animation7.start()
-                animation8.to = 0
-                animation8.stop()
-                animation8.start()
-                animation9.to = 0
-                animation9.stop()
-                animation9.start()
+                bottomDeskt.hide()
+                cursorShape = Qt.ArrowCursor
             }
         }
     }
@@ -404,7 +435,7 @@ AppCustom {
         id: preview
         x: 0
         y: 0
-        width: main.width / 6 + 20
+        width: root.width / 6 + 20
         height: width - 60
         opacity: 0.0
         color: "transparent"
@@ -430,20 +461,83 @@ AppCustom {
         }
     }
 
-    Label {
-        id: videoTitle
-        x: (main.width / 2) - (width / 2)
-        y: 25
-        text: Context.uri().split('/')[Context.uri().split('/').length - 1]
-        size: 12
-        opacity: 0.0
+    Rectangle {
+        id: titleArea
+        anchors.top: parent.top
+        anchors.topMargin: 12
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        height: 14
+        color: "#00000000"
+        clip: true
+        property bool start: true
+        property int space: 10
+        property string fullTitle: Context.uri()
+        property string originalTitle: Context.uri().split('/')[Context.uri().split('/').length - 1]
+        property alias videoTitle: videoTitle
+        Label {
+            id: videoTitle
+            text: titleArea.originalTitle
+            size: 12
+            opacity: 0.0
+            anchors.centerIn: parent
+        }
+
+        function titleFormat(arg) {
+            if (arg === "") return ""
+            if (arg.indexOf("/") === -1) return arg
+            return arg.split('/')[arg.split('/').length - 1]
+        }
+
+        function titleSize() {
+            while (true) {
+                if (titleArea.width < 0) break
+                if (start) {
+                    videoTitle.text = titleArea.originalTitle
+                    start = false
+                }
+                if (videoTitle.width + space > titleArea.width) {
+                    var len = videoTitle.text.length
+                    videoTitle.text = videoTitle.text.substring(0, len - 6) + "..."
+                }
+                if (videoTitle.width + space <= titleArea.width) {
+                    start = true
+                    break
+                }
+            }
+        }
+
+        onOriginalTitleChanged: {
+            originalTitle = titleFormat(originalTitle)
+            root.title = "Synth Player | " + titleArea.originalTitle
+        }
+
+        onWidthChanged: {
+            while (true) {
+                if (titleArea.width < 0) break
+                if (start) {
+                    videoTitle.text = titleArea.originalTitle
+                    start = false
+                }
+                if (videoTitle.width + space > titleArea.width) {
+                    var len = videoTitle.text.length
+                    videoTitle.text = videoTitle.text.substring(0, len - 6) + "..."
+                }
+                if (videoTitle.width + space <= titleArea.width) {
+                    start = true
+                    break
+                }
+            }
+        }
     }
 
     ProgressBar {
         id: progress
         x: 80
-        y: main.height - (main.height / 6)
-        width: main.width - 160
+        y: root.height - (root.height / 6)
+        width: root.width - 160
         height: 6
         max: mediaPlayer.duration
         opacity: 0.0
@@ -453,50 +547,53 @@ AppCustom {
             mediaPlayer.seek(atual)
         }
 
-        onMousexChanged: {
-            mediaPlayerPreview.seek(value)
-            mediaPlayerPreview.play()
-            mediaPlayerPreview.pause()
-            preview.x = (x + mousex) - (preview.width / 2)
-            preview.y = y - (preview.height + 10)
+        Timer {
+            id: timer
+            running: false
+            repeat: false
+            interval: 500
+            property bool hide: false
+            onTriggered: {
+                mediaPlayerPreview.seek(parent.value)
+                mediaPlayerPreview.play()
+                mediaPlayerPreview.pause()
+                preview.x = (parent.x + parent.mousex) - (preview.width / 2)
+                preview.y = parent.y - (preview.height + 10)
+                if (hide) {
+                    animation4.to = 0
+                    animation4.stop()
+                    animation4.start()
+                } else {
+                    animation4.to = 1
+                    animation4.stop()
+                    animation4.start()
+                }
+            }
+        }
 
-            animation4.to = 1
-            animation4.stop()
-            animation4.start()
+        onMousexChanged: {
+            timer.stop()
+            timer.interval = 100
+            timer.hide = false
+            timer.start()
         }
 
         onHover: {
-            mediaPlayerPreview.seek(value)
-            mediaPlayerPreview.play()
-            mediaPlayerPreview.pause()
-            preview.x = (x + mousex) - (preview.width / 2)
-            preview.y = y - (preview.height + 10)
+            timer.stop()
+            timer.interval = 500
+            timer.hide = false
+            timer.start()
 
-            animation4.to = 1
-            animation4.stop()
-            animation4.start()
+            bottomDeskt.show()
+            mouse.cursorShape = Qt.PointingHandCursor
+        }
 
-            animation1.to = 0.4
-            animation1.stop()
-            animation1.start()
-            animation2.to = 0.8
-            animation2.stop()
-            animation2.start()
-            animation3.to = 0.8
-            animation3.stop()
-            animation3.start()
-            animation5.to = 1
-            animation5.stop()
-            animation5.start()
-            animation6.to = 1
-            animation6.stop()
-            animation6.start()
-            animation7.to = 1
-            animation7.stop()
-            animation7.start()
-            animation8.to = 1
-            animation8.stop()
-            animation8.start()
+        onOut: {
+            timer.stop()
+            timer.interval = 0
+            timer.hide = true
+            timer.start()
+            mouse.cursorShape = Qt.ArrowCursor
         }
     }
 
@@ -532,6 +629,15 @@ AppCustom {
             mediaPlayer.volume = valor
             Context.volume(value)
         }
+
+        onHover: {
+            bottomDeskt.show()
+            mouse.cursorShape = Qt.PointingHandCursor
+        }
+
+        onOut: {
+            mouse.cursorShape = Qt.ArrowCursor
+        }
     }
 
     Label {
@@ -541,14 +647,23 @@ AppCustom {
         text: "\uf0e2"
         size: 14
         opacity: 0.0
-        color: Context.loop() === 0 ? "#ffffff" : Context.detailColor()
-
+        color: Context.loop() === 0 ? "#ffffff" : detail
         property int activeLoop: Context.loop()
-
+        font.family: "Font Awesome 5 Free"
         MouseArea {
             anchors.fill: parent
-            onClicked: {
+            hoverEnabled: true
 
+            onHoveredChanged: {
+                bottomDeskt.show()
+                cursorShape = Qt.PointingHandCursor
+            }
+
+            onExited: {
+                cursorShape = Qt.ArrowCursor
+            }
+
+            onClicked: {
                 if (loop.activeLoop == 0) {
                     loop.activeLoop = 1
                     loop.color = detail
@@ -558,7 +673,6 @@ AppCustom {
                     loop.color = "#ffffff"
                     mediaPlayer.loops = 0
                 }
-
                 Context.loop(loop.activeLoop)
             }
         }
@@ -566,13 +680,54 @@ AppCustom {
 
     WindowDecoration {
         id: decoration
-        win: main
+        win: root
         opacity: 0
         detail: detail
+        Label {
+            x: 8
+            y: 5
+            text: "\uf2d2"
+            size: 12
+            opacity: 0.7
+            color: "#ffffff"
+            font.family: "Font Awesome 5 Free"
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                property bool colorTmp: true
+                property int rootW: 0
+                property int rootH: 0
+
+                onHoveredChanged: {
+                    decoration.opacity = 1.0
+                    cursorShape = Qt.PointingHandCursor
+                }
+
+                onExited: {
+                    cursorShape = Qt.ArrowCursor
+                }
+
+                onClicked: {
+                    if (colorTmp) {
+                        parent.color = detail
+                        rootW = root.width
+                        rootH = root.height
+                        root.width = 340
+                        root.height = 180
+                        root.flags = Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
+                    } else {
+                        parent.color = "#ffffff"
+                        root.width = rootW
+                        root.height = rootH
+                        root.flags = Qt.Window | Qt.FramelessWindowHint
+                    }
+                    colorTmp = !colorTmp
+                }
+            }
+        }
     }
 
     Component.onCompleted: {
-
         progress.detail = Context.detailColor()
         controller.detail = progress.detail
         decoration.detail = controller.detail
@@ -590,5 +745,7 @@ AppCustom {
             loading.visible = false
             overlay.visible = false
         }
+
+        titleArea.titleSize()
     }
 }

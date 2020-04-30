@@ -9,6 +9,7 @@ Rectangle {
     radius: height
     color: "transparent"
 
+    property alias mouse: mouseControl
     property alias bg: bg
     property string detail: "#7310A2"
 
@@ -25,6 +26,8 @@ Rectangle {
     property int position: -1
 
     signal change
+    signal hover
+    signal out
 
     function setPosition() {
         perValue = parseInt((position * 100) / width)
@@ -59,6 +62,7 @@ Rectangle {
     MouseArea {
         id: mouseControl
         anchors.fill: parent
+        hoverEnabled: true
         property bool move: false
 
         Rectangle {
@@ -121,6 +125,14 @@ Rectangle {
             }
 
             change()
+        }
+
+        onHoveredChanged: {
+            hover()
+        }
+
+        onExited: {
+            out()
         }
     }
 

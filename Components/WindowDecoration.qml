@@ -49,10 +49,12 @@ Rectangle {
             onHoveredChanged: {
                 decoration.opacity = 1.0
                 btnMin.color = detail
+                cursorShape = Qt.PointingHandCursor
             }
 
             onExited: {
                 btnMin.color = "#ffffff"
+                cursorShape = Qt.ArrowCursor
             }
 
             onClicked: {
@@ -80,10 +82,12 @@ Rectangle {
             onHoveredChanged: {
                 decoration.opacity = 1.0
                 btnClose.color = detail
+                cursorShape = Qt.PointingHandCursor
             }
 
             onExited: {
                 btnClose.color = "#ffffff"
+                cursorShape = Qt.ArrowCursor
             }
 
             onClicked: {
@@ -110,10 +114,12 @@ Rectangle {
             onHoveredChanged: {
                 decoration.opacity = 1.0
                 btnMax.color = detail
+                cursorShape = Qt.PointingHandCursor
             }
 
             onExited: {
                 btnMax.color = "#ffffff"
+                cursorShape = Qt.ArrowCursor
             }
 
             onClicked: {
