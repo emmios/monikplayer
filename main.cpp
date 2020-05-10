@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 {
     //QApplication app(argc, argv);
     singleApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
     app.setAttribute(Qt::AA_EnableHighDpiScaling, true);
 
     QDir dir;
