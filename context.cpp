@@ -89,6 +89,18 @@ void Context::volume(int value)
     video.setValue("volume", value);
 }
 
+int Context::hq()
+{
+    QSettings video(this->path + "settings.conf", QSettings::NativeFormat);
+    return video.value("hq").toInt();
+}
+
+void Context::hq(int value)
+{
+    QSettings video(this->path + "settings.conf", QSettings::NativeFormat);
+    video.setValue("hq", value);
+}
+
 int Context::loop()
 {
     QSettings video(this->path + "settings.conf", QSettings::NativeFormat);

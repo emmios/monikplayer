@@ -9,12 +9,13 @@
 #include <QCursor>
 #include <QSettings>
 #include <QDir>
-
+#include <QDebug>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/Xinerama.h>
+
 
 class Context : public QObject
 {
@@ -34,6 +35,8 @@ public:
     Q_INVOKABLE void volume(int value);
     Q_INVOKABLE int loop();
     Q_INVOKABLE void loop(int value);
+    Q_INVOKABLE int hq();
+    Q_INVOKABLE void hq(int value);
     Q_INVOKABLE QString verify();
     Q_INVOKABLE void setMedia(QString media);
     Q_INVOKABLE int windowMove(int x, int y, int w, int h);

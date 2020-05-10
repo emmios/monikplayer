@@ -33,16 +33,12 @@ AppCustom {
                 root.showFullScreen();
                 output.anchors.topMargin = 0
                 output.anchors.bottomMargin = 0
-                bg.anchors.topMargin = 0
-                bg.anchors.bottomMargin = 0
                 fullscreen = false
                 decoration.visible = false
             } else {
                 root.showNormal();
                 output.anchors.topMargin = 0//25
                 output.anchors.bottomMargin = 0
-                bg.anchors.topMargin = 0//25
-                bg.anchors.bottomMargin = 0
                 fullscreen = true
                 decoration.visible = true
             }
@@ -65,25 +61,32 @@ AppCustom {
         }
     }
 
-    Timer {
-        running: true
-        interval: 1000
-        repeat: true
-        onTriggered: {
-            var title = Context.verify()
-            if (title !== titleArea.fullTitle) {
-                var url = "file://" + title
+    function imedia(file) {
+        var url = "file://" + file
+        btn.text = "\uf28b"
+        btn.paused = true
+        mediaPlayer.source = url
+        mediaPlayerPreview.source = url
+        titleArea.fullTitle = file
+        titleArea.originalTitle = file
+        titleArea.titleSize()
+    }
 
-                btn.text = "\uf28b"
-                btn.paused = true
-
-                mediaPlayer.source = url
-                mediaPlayerPreview.source = url
-                titleArea.fullTitle = title
-                titleArea.originalTitle = title
-                titleArea.titleSize()
-            }
+    function quality(arg) {
+        if (arg) {
+            output.smooth = true
+            hue.enabled = true
+            hue.visible = true
+            output.visible = false
+            Context.hq(1)
+        } else {
+            output.smooth = false
+            hue.visible = false
+            hue.enabled = false
+            output.visible = true
+            Context.hq(0)
         }
+        hue.source = output
     }
 
     DropArea {
@@ -97,7 +100,6 @@ AppCustom {
         }
         onDropped:
         {
-            Context.setMedia(url)
             mediaPlayer.source = url
             mediaPlayerPreview.source = url
             titleArea.fullTitle = url
@@ -107,26 +109,6 @@ AppCustom {
             btn.text = "\uf28b"
             btn.paused = true
         }
-    }
-
-    /*
-    Rectangle {
-        id: bgWindow
-        x: 0
-        y: 0
-        anchors.fill: parent
-        color: "#000"
-        opacity: 0.5
-    }*/
-
-    Rectangle {
-        id: bg
-        x: 0
-        y: 0
-        anchors.fill: parent
-        anchors.topMargin: 0//25
-        anchors.bottomMargin: 0
-        color: "#000000"
     }
 
     Rectangle {
@@ -168,7 +150,7 @@ AppCustom {
         smooth: true
     }
 
-    ColorOverlay{
+    ColorOverlay {
         id: overlay
         x: 20
         y: 20
@@ -190,7 +172,8 @@ AppCustom {
         anchors.topMargin: 0//25
         anchors.bottomMargin: 0
         source: mediaPlayer
-
+        visible: true
+        smooth: false
         MediaPlayer {
             id: mediaPlayer
             source: media
@@ -219,6 +202,7 @@ AppCustom {
             }
 
             onPositionChanged: {
+
                 progress.atual = position
 
                 var seconds = parseInt((position % 60000) / 1000)
@@ -244,35 +228,18 @@ AppCustom {
                 timeRight.text = _hours + ':' + _minutes + ':' + _seconds
             }
         }
+    }
 
-//        Image {
-//            id: frame
-//            x: 0
-//            y: 329
-//            width: 101
-//            height: 71
-//            source: "qrc:/qtquickplugin/images/template_image.png"
-
-//            MouseArea {
-//                anchors.leftMargin: -7
-//                anchors.bottomMargin: -7
-//                anchors.fill: parent
-//                onClicked: {
-
-//                    output.grabToImage(function(image) {
-//                        //console.log("Called...", arguments)
-//                        frame.source = image.url
-//                        //image.saveToFile("/home/shenoisz/Documents/estudos/QT-creator/build-QmlPlayer2-Qt_5_3_2_qt5-Release/screen.png"); // save happens here
-//                    })
-
-//                    /*
-//                    output.grabToImage(function(image) {
-//                        console.log("Called...", arguments)
-//                        image.saveToFile("/home/shenoisz/Documents/estudos/QT-creator/build-QmlPlayer2-Qt_5_3_2_qt5-Release/screen.png"); // save happens here
-//                    })*/
-//               }
-//            }
-//        }
+    HueSaturation {
+        id: hue
+        anchors.fill: output
+        hue: 0.0
+        saturation: 0.5
+        lightness: 0.0
+        antialiasing: true
+        smooth: true
+        enabled: false
+        cached: true
     }
 
     Rectangle {
@@ -296,7 +263,6 @@ AppCustom {
         PropertyAnimation {id: animation5; target: timeLeft; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation6; target: timeRight; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation7; target: controller; property: "opacity"; to: 1; duration: 500}
-        PropertyAnimation {id: animation8; target: loop; property: "opacity"; to: 1; duration: 500}
         PropertyAnimation {id: animation9; target: videoTitle; property: "opacity"; to: 0.8; duration: 500}
 
         function show() {
@@ -318,9 +284,8 @@ AppCustom {
             animation7.to = 0.7
             animation7.stop()
             animation7.start()
-            animation8.to = 0.7
-            animation8.stop()
-            animation8.start()
+            loop.animation(0.7)
+            hq.animation(0.7)
             animation9.to = 0.7
             animation9.stop()
             animation9.start()
@@ -348,9 +313,8 @@ AppCustom {
             animation7.to = 0
             animation7.stop()
             animation7.start()
-            animation8.to = 0
-            animation8.stop()
-            animation8.start()
+            loop.animation(0)
+            hq.animation(0)
             animation9.to = 0
             animation9.stop()
             animation9.start()
@@ -375,9 +339,8 @@ AppCustom {
             animation7.to = 1
             animation7.stop()
             animation7.start()
-            animation8.to = 1
-            animation8.stop()
-            animation8.start()
+            loop.animation(1)
+            hq.animation(1)
         }
 
         MouseArea {
@@ -400,7 +363,7 @@ AppCustom {
         y: (root.height / 2) - (height / 2)
         text: "\uf28b"
         size: root.width / 3
-        font.family: "Font Awesome 5 Free"
+        font.family: font_regular.name
         opacity: 0.0
         property bool paused: true
         MouseArea {
@@ -649,7 +612,7 @@ AppCustom {
         opacity: 0.0
         color: Context.loop() === 0 ? "#ffffff" : detail
         property int activeLoop: Context.loop()
-        font.family: "Font Awesome 5 Free"
+        font.family: font_regular.name
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
@@ -676,6 +639,58 @@ AppCustom {
                 Context.loop(loop.activeLoop)
             }
         }
+        function animation(arg) {
+            loopAni.to = arg
+            loopAni.stop()
+            loopAni.start()
+        }
+        PropertyAnimation {id: loopAni; target: loop; property: "opacity"; to: 1; duration: 500}
+    }
+
+    Label {
+        id: hq
+        x: loop.x + loop.width + 10
+        y: timeRight.y + 32
+        text: "\uf0fd"
+        size: 14
+        opacity: 0.0
+        color: Context.hq() === 0 ? "#ffffff" : detail
+        property int activeHq: Context.hq()
+        font.family: font_solid.name
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+
+            onHoveredChanged: {
+                bottomDeskt.show()
+                cursorShape = Qt.PointingHandCursor
+            }
+
+            onExited: {
+                cursorShape = Qt.ArrowCursor
+            }
+
+            onClicked: {
+                if (hq.activeHq === 1) {
+                    quality(false)
+                    hq.activeHq = 0
+                    hq.color = "#ffffff"
+                } else {
+                    quality(true)
+                    hq.activeHq = 1
+                    hq.color = detail
+                }
+            }
+        }
+
+        Component.onCompleted: { quality(activeHq === 1 ? true : false) }
+
+        function animation(arg) {
+            hqAni.to = arg
+            hqAni.stop()
+            hqAni.start()
+        }
+        PropertyAnimation {id: hqAni; target: hq; property: "opacity"; to: 1; duration: 500}
     }
 
     WindowDecoration {
@@ -690,7 +705,7 @@ AppCustom {
             size: 12
             opacity: 0.7
             color: "#ffffff"
-            font.family: "Font Awesome 5 Free"
+            font.family: font_regular.name
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true

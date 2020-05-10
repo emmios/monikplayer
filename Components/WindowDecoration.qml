@@ -7,7 +7,7 @@ Rectangle {
     y: 0
     width: parent.width
     height: 25
-    color: "transparent"
+    color: "#00000000"
 
     property var win: Object
     property string detail: "#ffffff"
@@ -37,7 +37,7 @@ Rectangle {
         x: btnMax.x - width - 15
         y: btnMax.y - 2
         text: "\uf2d1"
-        font.family: "Font Awesome 5 Free"
+        font.family: font_regular.name
         size: 10
         opacity: 0.8
         color: "#ffffff"
@@ -70,7 +70,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 8
         text: "\uf00d" //"\uf410"
-        font.family: "Font Awesome 5 Free"
+        font.family: font_regular.name
         size: 12
         opacity: 0.8
         color: "#ffffff"
@@ -101,7 +101,7 @@ Rectangle {
         x: btnClose.x - width - 15
         y: btnClose.y + 2
         text: "\uf2d0"
-        font.family: "Font Awesome 5 Free"
+        font.family: font_regular.name
         size: 10
         opacity: 0.8
         color: "#ffffff"

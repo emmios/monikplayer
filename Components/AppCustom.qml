@@ -9,12 +9,16 @@ ApplicationWindow {
     visible: true
     width: 900
     height: 600
-    title: qsTr("App")
+    title: "App"
 
-    property alias fontIcons: fontIcons
+    property alias font_regular: regular
+    property alias font_solid: solid
+    property alias font_brand: brand
     property alias focus: wm
 
-    FontLoader { id: fontIcons; name: "Font Awesome 5 Free"; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
+    FontLoader { id: regular; source: "qrc:/Components/fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
+    FontLoader { id: solid; source: "qrc:/Components/fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-solid-900.ttf" }
+    FontLoader { id: brand; source: "qrc:/Components/fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-brands-400.ttf" }
 
     MouseArea {
         anchors.fill: parent
@@ -41,7 +45,7 @@ ApplicationWindow {
         anchors.bottomMargin: 0
         width: 6
         z: 999
-        color: "transparent"
+        color: "#00000000"
 
         MouseArea {
             anchors.fill: parent
@@ -91,7 +95,7 @@ ApplicationWindow {
         anchors.bottomMargin: 0
         width: 6
         z: 999
-        color: "transparent"
+        color: "#00000000"
 
         MouseArea {
             anchors.fill: parent
@@ -128,7 +132,7 @@ ApplicationWindow {
         anchors.bottomMargin: 0
         height: 6
         z: 999
-        color: "transparent"
+        color: "#00000000"
 
         MouseArea {
             anchors.fill: parent

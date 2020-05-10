@@ -1,12 +1,13 @@
 TEMPLATE = app
 
-QT += core qml quick multimedia widgets multimediawidgets x11extras
+QT += core qml quick multimedia widgets multimediawidgets x11extras dbus
 # widgets multimediawidgets
 CONFIG += c++11
 
 SOURCES += main.cpp \
     context.cpp \
-    singleapplication.cpp
+    singleapplication.cpp \
+    imedia.cpp
 
 RESOURCES += qml.qrc \
     components.qrc \
@@ -17,6 +18,8 @@ LIBS += -lX11
 #QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 CONFIG += "GST_VERSION=1.0"
 PKGCONFIG +=  gstreamer-1.0
+
+INCLUDEPATH = s/usr/include/x86_64-linux-gnu/qt5/
 
 GST_VERSION = 1.0
 #PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer"
@@ -46,4 +49,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     context.h \
-    singleapplication.h
+    singleapplication.h \
+    imedia.h
