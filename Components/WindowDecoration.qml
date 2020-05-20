@@ -32,6 +32,47 @@ Rectangle {
         }
     }
 
+    MouseArea {
+        id: mouseMain
+        anchors.fill: parent
+        property int startX: 0
+        property int startY: 0
+        property bool fullscreen: true
+
+        onDoubleClicked: {
+
+            if (fullscreen) {
+                win.showFullScreen();
+                output.anchors.topMargin = 0
+                output.anchors.bottomMargin = 0
+                fullscreen = false
+                decoration.visible = false
+            } else {
+                win.showNormal();
+                output.anchors.topMargin = 0//25
+                output.anchors.bottomMargin = 0
+                fullscreen = true
+                decoration.visible = true
+            }
+        }
+
+        onPressed: {
+            startX = mouseX
+            startY = mouseY
+            cursorShape = Qt.SizeAllCursor
+        }
+
+        onReleased: {
+            cursorShape = Qt.ArrowCursor
+        }
+
+        onMouseXChanged: {
+            win.x = Context.mouseX() - startX
+            win.y = Context.mouseY() - startY
+            Context.windowMove(win.x, win.y, win.width, win.height)
+        }
+    }
+
     Label {
         id: btnMin
         x: btnMax.x - width - 15

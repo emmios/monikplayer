@@ -37,8 +37,6 @@ public:
     Q_INVOKABLE void loop(int value);
     Q_INVOKABLE int hq();
     Q_INVOKABLE void hq(int value);
-    Q_INVOKABLE QString verify();
-    Q_INVOKABLE void setMedia(QString media);
     Q_INVOKABLE int windowMove(int x, int y, int w, int h);
 
 private:

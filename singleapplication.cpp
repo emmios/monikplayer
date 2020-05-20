@@ -11,7 +11,7 @@ singleApplication::singleApplication(int &argc, char **argv)
 singleApplication::~singleApplication()
 {
     if(_singular->isAttached())
-            _singular->detach();
+        _singular->detach();
 }
 
 void singleApplication::setLock()

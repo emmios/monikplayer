@@ -21,11 +21,10 @@ AppCustom {
 
     MouseArea {
         id: mouseMain
+        anchors.fill: parent
         property int startX: 0
         property int startY: 0
         property bool fullscreen: true
-
-        anchors.fill: parent
 
         onDoubleClicked: {
 
@@ -70,6 +69,20 @@ AppCustom {
         titleArea.fullTitle = file
         titleArea.originalTitle = file
         titleArea.titleSize()
+
+        if (file.indexOf(".mp3") !== -1 ||
+            file.indexOf(".m4a") !== -1 ||
+            file.indexOf(".ogg") !== -1 ||
+            file.indexOf(".aac") !== -1 ||
+            file.indexOf(".ac3") !== -1 ||
+            file.indexOf(".wma") !== -1) {
+            loading.visible = true
+            overlay.visible = true
+            animation.playing = true
+        } else {
+            loading.visible = false
+            overlay.visible = false
+        }
     }
 
     function quality(arg) {
@@ -92,7 +105,6 @@ AppCustom {
     DropArea {
         id: dragTarget
         anchors.fill: parent
-
         property string url: ""
 
         onEntered: {
@@ -108,6 +120,20 @@ AppCustom {
             //btn.text = "\uf144"
             btn.text = "\uf28b"
             btn.paused = true
+
+            if (url.indexOf(".mp3") !== -1 ||
+                url.indexOf(".m4a") !== -1 ||
+                url.indexOf(".ogg") !== -1 ||
+                url.indexOf(".aac") !== -1 ||
+                url.indexOf(".ac3") !== -1 ||
+                url.indexOf(".wma") !== -1) {
+                loading.visible = true
+                overlay.visible = true
+                animation.playing = true
+            } else {
+                loading.visible = false
+                overlay.visible = false
+            }
         }
     }
 
@@ -119,17 +145,12 @@ AppCustom {
         AnimatedImage {
             id: animation
             anchors.fill: parent
+            //fillMode: AnimatedImage.PreserveAspectFit
+            antialiasing: true
+            smooth: true
             asynchronous: true
             source: "qrc:/Resources/audio-animação.gif"
-        }
-
-        Rectangle {
-            property int frames: animation.frameCount
-
-            width: 4; height: 8
-            x: (animation.width - width) * animation.currentFrame / frames
-            y: animation.height
-            color: "#fff"
+            onStatusChanged: playing = (status == AnimatedImage.Ready)
         }
 
         Rectangle {
@@ -146,8 +167,6 @@ AppCustom {
         width: 60
         height: 60
         visible: false
-        antialiasing: true
-        smooth: true
     }
 
     ColorOverlay {
@@ -374,10 +393,12 @@ AppCustom {
                 if (btn.paused) {
                     btn.text = "\uf144"
                     mediaPlayer.pause()
+                    animation.playing = false
 
                 } else {
                     parent.text = "\uf28b"
                     mediaPlayer.play()
+                    animation.playing = true
                 }
                 btn.paused = !btn.paused
             }
@@ -748,14 +769,15 @@ AppCustom {
         decoration.detail = controller.detail
         detail = progress.detail
 
-        if (media.indexOf(".mp3") != -1 ||
-            media.indexOf(".m4a") != -1 ||
-            media.indexOf(".ogg") != -1 ||
-            media.indexOf(".aac") != -1 ||
-            media.indexOf(".ac3") != -1 ||
-            media.indexOf(".wma") != -1) {
+        if (media.indexOf(".mp3") !== -1 ||
+            media.indexOf(".m4a") !== -1 ||
+            media.indexOf(".ogg") !== -1 ||
+            media.indexOf(".aac") !== -1 ||
+            media.indexOf(".ac3") !== -1 ||
+            media.indexOf(".wma") !== -1) {
             loading.visible = true
             overlay.visible = true
+            animation.playing = true
         } else {
             loading.visible = false
             overlay.visible = false

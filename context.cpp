@@ -6,18 +6,6 @@ Context::Context()
     this->path = dir.homePath() + "/.config/synth/synth-player/";
 }
 
-void Context::setMedia(QString media)
-{
-    QSettings settings(path + "settings.conf", QSettings::NativeFormat);
-    settings.setValue("media", media);
-}
-
-QString Context::verify()
-{
-    QSettings settings(this->path + "settings.conf", QSettings::NativeFormat);
-    return settings.value("media").toString();
-}
-
 int Context::windowMove(int x, int y, int w, int h)
 {
     Display *d = XOpenDisplay(0);

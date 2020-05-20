@@ -4,6 +4,11 @@ QT += core qml quick multimedia widgets multimediawidgets x11extras dbus
 # widgets multimediawidgets
 CONFIG += c++11
 
+HEADERS += \
+    context.h \
+    singleapplication.h \
+    imedia.h
+
 SOURCES += main.cpp \
     context.cpp \
     singleapplication.cpp \
@@ -46,8 +51,3 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-HEADERS += \
-    context.h \
-    singleapplication.h \
-    imedia.h

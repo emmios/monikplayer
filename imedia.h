@@ -11,7 +11,7 @@
 class Imedia : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "emmi.interface.multimedia")
+    Q_CLASSINFO("D-Bus Interface", "emmios.interface.multimedia")
 
 public:
     QWindow *main;
