@@ -1,8 +1,7 @@
 //contents of App.qml
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import "./"
-
 
 ApplicationWindow {
     id: main
@@ -16,9 +15,9 @@ ApplicationWindow {
     property alias font_brand: brand
     property alias focus: wm
 
-    FontLoader { id: regular; source: "qrc:/Components/fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
-    FontLoader { id: solid; source: "qrc:/Components/fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-solid-900.ttf" }
-    FontLoader { id: brand; source: "qrc:/Components/fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-brands-400.ttf" }
+    FontLoader { id: regular; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
+    FontLoader { id: solid; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-solid-900.ttf" }
+    FontLoader { id: brand; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-brands-400.ttf" }
 
     MouseArea {
         anchors.fill: parent
@@ -169,7 +168,7 @@ ApplicationWindow {
         anchors.topMargin: 0
         height: 6
         z: 999
-        color: "transparent"
+        color: "#00000000"
 
         MouseArea {
             anchors.fill: parent

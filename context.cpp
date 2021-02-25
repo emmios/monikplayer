@@ -6,6 +6,11 @@ Context::Context()
     this->path = dir.homePath() + "/.config/synth/synth-player/";
 }
 
+QString Context::url(QString path)
+{
+    return QUrl::fromLocalFile(path).url();
+}
+
 int Context::windowMove(int x, int y, int w, int h)
 {
     Display *d = XOpenDisplay(0);
@@ -54,6 +59,11 @@ int Context::mouseY()
 QString Context::uri()
 {
     return media;
+}
+
+QString Context::uri_media()
+{
+    return url(media);
 }
 
 QString Context::detailColor()

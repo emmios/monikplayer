@@ -1,5 +1,4 @@
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Rectangle {
     x: 0
@@ -7,7 +6,7 @@ Rectangle {
     z: tabs.titles.length - index
     width: parent.width
     height: parent.height - y
-    color: "transparent"
+    color: "#00000000"
     visible: (index == 0) ? true : false
     //Label {text: "Option - " + index}
 }

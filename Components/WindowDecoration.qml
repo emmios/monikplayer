@@ -1,6 +1,5 @@
-import QtQuick 2.9
+import QtQuick 2.12
 import "./"
-
 
 Rectangle {
     x: 0
@@ -8,9 +7,10 @@ Rectangle {
     width: parent.width
     height: 25
     color: "#00000000"
-
     property var win: Object
     property string detail: "#ffffff"
+
+    FontLoader { id: regular; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
 
     Rectangle {
         anchors.fill: parent
@@ -40,7 +40,6 @@ Rectangle {
         property bool fullscreen: true
 
         onDoubleClicked: {
-
             if (fullscreen) {
                 win.showFullScreen();
                 output.anchors.topMargin = 0
@@ -78,7 +77,7 @@ Rectangle {
         x: btnMax.x - width - 15
         y: btnMax.y - 2
         text: "\uf2d1"
-        font.family: font_regular.name
+        font.family: regular.name
         size: 10
         opacity: 0.8
         color: "#ffffff"
@@ -111,7 +110,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 8
         text: "\uf00d" //"\uf410"
-        font.family: font_regular.name
+        font.family: regular.name
         size: 12
         opacity: 0.8
         color: "#ffffff"
@@ -142,7 +141,7 @@ Rectangle {
         x: btnClose.x - width - 15
         y: btnClose.y + 2
         text: "\uf2d0"
-        font.family: font_regular.name
+        font.family: regular.name
         size: 10
         opacity: 0.8
         color: "#ffffff"

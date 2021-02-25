@@ -1,6 +1,5 @@
 //contents of Switch.qml
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Rectangle {
     id: swit
@@ -8,7 +7,6 @@ Rectangle {
     height: 14
     radius: height
     antialiasing: true
-
     property bool actived: false
     property bool value: false
     property bool noStatus: false

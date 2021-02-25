@@ -1,13 +1,11 @@
-import QtQuick 2.9
+import QtQuick 2.12
 import "../Components"
-
 
 Item {
     id: tabs
     x: 0
     y: 0
     anchors.fill: parent
-
     property alias titles: rowTabs.titles
     property int _index: 0
     property string textColor: "#fff"
@@ -20,7 +18,6 @@ Item {
         x: 0
         y: 0
         anchors.fill: parent
-
         property var titles: []
 
         Repeater {
@@ -30,7 +27,7 @@ Item {
             Rectangle {
                 width: 180
                 height: 40
-                color: "transparent"
+                color: "#00000000"
 
                 property alias cor_select: cor_select
 
@@ -40,7 +37,7 @@ Item {
                     anchors.left: parent.left
                     anchors.rightMargin: 10
                     anchors.right: parent.right
-                    color: "transparent"
+                    color: "#00000000"
 
                     property alias cor_select: cor_select
 
@@ -65,7 +62,7 @@ Item {
                         anchors.bottomMargin: 0
                         anchors.bottom: parent.bottom
                         Component.onCompleted: {
-                            color = (index == 0) ? "#7310A2" : "transparent"
+                            color = (index == 0) ? "#7310A2" : "#00000000"
                         }
                     }
                 }
@@ -74,7 +71,7 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         for (var i = 0; i < titles.length; i++) {
-                            tabs_content.itemAt(i).cor_select.color = "transparent"
+                            tabs_content.itemAt(i).cor_select.color = "#00000000"
                         }
                         cor_select.color = "#7310A2"
                         _index = index

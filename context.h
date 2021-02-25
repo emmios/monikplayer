@@ -9,6 +9,7 @@
 #include <QCursor>
 #include <QSettings>
 #include <QDir>
+#include <QUrl>
 #include <QDebug>
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -16,10 +17,8 @@
 #include <X11/Xutil.h>
 #include <X11/extensions/Xinerama.h>
 
-
 class Context : public QObject
 {
-
     Q_OBJECT
 
 public:
@@ -27,9 +26,11 @@ public:
     QString path;
     QString media;
     QWindow *window;
+    Q_INVOKABLE QString url(QString path);
     Q_INVOKABLE int mouseX();
     Q_INVOKABLE int mouseY();
     Q_INVOKABLE QString uri();
+    Q_INVOKABLE QString uri_media();
     Q_INVOKABLE QString detailColor();
     Q_INVOKABLE int volume();
     Q_INVOKABLE void volume(int value);

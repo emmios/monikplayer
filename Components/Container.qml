@@ -1,5 +1,5 @@
 //contents of Button.qml
-import QtQuick 2.9
+import QtQuick 2.12
 
 Item {
     id: containers
@@ -7,6 +7,5 @@ Item {
     y: 0
     anchors.fill: parent
     anchors.margins: margin
-
     property int margin: 20
 }

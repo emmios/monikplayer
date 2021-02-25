@@ -1,9 +1,7 @@
 //contents of List.qml
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Column {
-
     id: colun
     //property int repeat: 1
     property int selected: 0
@@ -26,7 +24,7 @@ Column {
             width: w
             height: h
             property bool _selected: index == selected ? true : false
-            color: "transparent"
+            color: "#00000000"
 
             Rectangle {
                 id: focusColor

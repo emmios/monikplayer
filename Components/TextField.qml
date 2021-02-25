@@ -1,6 +1,5 @@
 //contents of TextField.qml
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Rectangle {
     id: textFild
@@ -8,9 +7,8 @@ Rectangle {
     y: 0
     width: 100
     height: 30
-    color: "transparent"
+    color: "#00000000"
     //border {color: "#ffffff"; width: 1}
-
     property alias text: input.text
     property string texttmp: ""
     property alias size: input.font.pixelSize
@@ -107,7 +105,7 @@ Rectangle {
 
     Rectangle {
         id: textBar
-        color: "transparent"
+        color: "#00000000"
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         width: parent.width

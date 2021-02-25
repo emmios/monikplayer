@@ -1,9 +1,9 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtMultimedia 5.9
-import QtGraphicalEffects 1.0
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
+import QtMultimedia 5.12
+import QtGraphicalEffects 1.12
 import "./Components"
-
 
 AppCustom {
     id: root
@@ -17,27 +17,23 @@ AppCustom {
     flags: Qt.Window | Qt.FramelessWindowHint
 
     property string detail: "#007fff"
-    property string media: "file://" + Context.uri() 
+    property string media: Context.uri_media()
 
     MouseArea {
-        id: mouseMain
+        id: mouseroot
         anchors.fill: parent
+        enabled: false
         property int startX: 0
         property int startY: 0
         property bool fullscreen: true
 
         onDoubleClicked: {
-
             if (fullscreen) {
                 root.showFullScreen();
-                output.anchors.topMargin = 0
-                output.anchors.bottomMargin = 0
                 fullscreen = false
                 decoration.visible = false
             } else {
                 root.showNormal();
-                output.anchors.topMargin = 0//25
-                output.anchors.bottomMargin = 0
                 fullscreen = true
                 decoration.visible = true
             }
@@ -61,13 +57,13 @@ AppCustom {
     }
 
     function imedia(file) {
-        var url = "file://" + file
+        media = file
         btn.text = "\uf28b"
         btn.paused = true
-        mediaPlayer.source = url
-        mediaPlayerPreview.source = url
-        titleArea.fullTitle = file
-        titleArea.originalTitle = file
+        mediaPlayer.source = file
+        mediaPlayerPreview.source = file
+        titleArea.fullTitle = decodeURIComponent(file)
+        titleArea.originalTitle = decodeURIComponent(file)
         titleArea.titleSize()
 
         if (file.indexOf(".mp3") !== -1 ||
@@ -83,23 +79,9 @@ AppCustom {
             loading.visible = false
             overlay.visible = false
         }
-    }
 
-    function quality(arg) {
-        if (arg) {
-            output.smooth = true
-            hue.enabled = true
-            hue.visible = true
-            output.visible = false
-            Context.hq(1)
-        } else {
-            output.smooth = false
-            hue.visible = false
-            hue.enabled = false
-            output.visible = true
-            Context.hq(0)
-        }
-        hue.source = output
+        playTimer.stop()
+        playTimer.start()
     }
 
     DropArea {
@@ -112,10 +94,11 @@ AppCustom {
         }
         onDropped:
         {
+            media = url
             mediaPlayer.source = url
             mediaPlayerPreview.source = url
-            titleArea.fullTitle = url
-            titleArea.originalTitle = url
+            titleArea.fullTitle = decodeURIComponent(url)
+            titleArea.originalTitle = decodeURIComponent(url)
             titleArea.titleSize()
             //btn.text = "\uf144"
             btn.text = "\uf28b"
@@ -134,6 +117,9 @@ AppCustom {
                 loading.visible = false
                 overlay.visible = false
             }
+
+            playTimer.stop()
+            playTimer.start()
         }
     }
 
@@ -183,46 +169,96 @@ AppCustom {
         opacity: 0.4
     }
 
+    function quality(arg) {
+        if (arg) {
+            //output.smooth = true
+            hue.enabled = true
+            hue.visible = true
+            output.visible = false
+            Context.hq(1)
+        } else {
+            //output.smooth = false
+            hue.visible = false
+            hue.enabled = false
+            output.visible = true
+            Context.hq(0)
+        }
+    }
+
+    Timer {
+        id: playTimer
+        running: false
+        interval: 500
+        repeat: false
+        onTriggered: {
+            mediaPlayer.stop()
+            mediaPlayer.play()
+        }
+    }
+
     VideoOutput {
         id: output
-        x: 0
-        y: 0
+        //x: 0
+        //y: 0
+        //width: root.width
+        //height: root.height
         anchors.fill: parent
-        anchors.topMargin: 0//25
-        anchors.bottomMargin: 0
         source: mediaPlayer
         visible: true
+        antialiasing: false
         smooth: false
+
         MediaPlayer {
             id: mediaPlayer
-            source: media
-            autoLoad: true
+            //source: media
+            autoLoad: false
             loops: Context.loop() === 0 ? 0 : Audio.Infinite
-            autoPlay: true
-            volume: 0.5
+            autoPlay: false
+            volume: 0.0
+            property bool clear: false
 
             onStatusChanged: {
-                if (status == MediaPlayer.EndOfMedia || status == MediaPlayer.Stopped) {
-                    seek(0)
-                    pause()
-                    btn.text = "\uf144"
-                    progress.atual = 0
-                    btn.paused = false
-                    animation1.to = 0.4
-                    animation1.stop()
-                    animation1.start()
-                    animation2.to = 0.8
-                    animation2.stop()
-                    animation2.start()
-                    animation3.to = 0.8
-                    animation3.stop()
-                    animation3.start()
+
+                if (status !== MediaPlayer.NoMedia) {
+                    if (status === MediaPlayer.Buffered) {
+                        controller.enabled = true
+                        progress.enabled = true
+                        //mediaPlayer.play()
+                    }
+
+                    if (status === MediaPlayer.EndOfMedia || status === MediaPlayer.Stopped) {
+                        seek(0)
+                        pause()
+                        btn.text = "\uf144"
+                        progress.atual = 0
+                        btn.paused = false
+                        animation1.to = 0.4
+                        animation1.stop()
+                        animation1.start()
+                        animation2.to = 0.8
+                        animation2.stop()
+                        animation2.start()
+                        animation3.to = 0.8
+                        animation3.stop()
+                        animation3.start()
+                    }
                 }
             }
 
             onPositionChanged: {
 
                 progress.atual = position
+
+                if (clear) {
+                    clear = false
+                    mediaPlayer.source = ""
+                    mediaPlayer.source = media
+                    mediaPlayer.play()
+                }
+
+                if (position > 0 && duration > 0 && position >= duration - 1) {
+                    clear = true
+                }
 
                 var seconds = parseInt((position % 60000) / 1000)
                 var minutes = parseInt(((position / 1000) / 60) % 60)
@@ -251,14 +287,19 @@ AppCustom {
 
     HueSaturation {
         id: hue
-        anchors.fill: output
+        //x: 0
+        //y: 0
+        //width: root.width
+        //height: root.height
+        anchors.fill: output.parent
+        source: output
         hue: 0.0
         saturation: 0.5
         lightness: 0.0
         antialiasing: true
         smooth: true
         enabled: false
-        cached: true
+        cached: false
     }
 
     Rectangle {
@@ -422,7 +463,7 @@ AppCustom {
         width: root.width / 6 + 20
         height: width - 60
         opacity: 0.0
-        color: "transparent"
+        color: "#00000000"
 
         Rectangle {
             anchors.fill: parent
@@ -526,6 +567,7 @@ AppCustom {
         max: mediaPlayer.duration
         opacity: 0.0
         detail: detail
+        enabled: false
 
         onClick: {
             mediaPlayer.seek(atual)
@@ -603,10 +645,17 @@ AppCustom {
         id: controller
         x: (timeRight.x + timeRight.width) - width
         y: timeRight.y + 40
-        position: Context.volume()
         opacity: 0
         bg.opacity: 0.5
         detail: detail
+        enabled: false
+        position: Context.volume()
+
+        onPositionChanged: {
+            var valor = (value * 1) / 100
+            mediaPlayer.volume = valor
+            Context.volume(value)
+        }
 
         onChange: {
             var valor = (value * 1) / 100
@@ -784,5 +833,9 @@ AppCustom {
         }
 
         titleArea.titleSize()
+        mediaPlayer.source = media
+        mouseroot.enabled = true
+        playTimer.stop()
+        playTimer.start()
     }
 }

@@ -18,7 +18,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(myMessageOutput);
+    //qInstallMessageHandler(myMessageOutput);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -28,15 +28,16 @@ int main(int argc, char *argv[])
     //app.setAttribute(Qt::AA_UseHighDpiPixmaps);
     //app.setAttribute(Qt::AA_EnableHighDpiScaling, true);
 
+    Context *context = new Context();
+
     // Kill instance
     if(app.lock())
     {
         QDBusInterface iface("emmios.interface.multimedia", "/emmios/interface/multimedia", "emmios.interface.multimedia", QDBusConnection::sessionBus());
         if (iface.isValid())
         {
-            iface.call("media", argv[1]);
+            iface.call("media", context->url(argv[1]));
         }
-
         return -1;
     }
     else
@@ -59,17 +60,14 @@ int main(int argc, char *argv[])
             file.close();
         }
 
-        Context *context = new Context();
-
         if (argc >= 2)
         {
             context->media = argv[1];
         }
         else
         {
-            context->media = path + "media/default.mp4";
+            //context->media = path + "media/default.mp4";
         }
-        //context->media = "/home/shenoisz/Vídeos/Eletro/Caramella girls - Caramelldansen Japanese video version.mp4";
 
         QQmlApplicationEngine engine;
         engine.rootContext()->setContextProperty("Context", context);

@@ -1,10 +1,9 @@
 //contents of Button.qml
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Rectangle {
     id: button
-    color: "transparent"
+    color: "#00000000"
 
     property alias text: label.text
     property alias size: label.font.pixelSize

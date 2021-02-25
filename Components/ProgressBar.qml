@@ -1,5 +1,4 @@
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Rectangle {
     id: progress
@@ -8,14 +7,13 @@ Rectangle {
     width: 200
     height: 10
     radius: height
-    color: "transparent"
+    color: "#00000000"
 
     property alias mouse: mouse
     property string detail: "#7310A2"
     property int max: 0
     property int min: 0
     property int atual: 0
-
     property int pro: 0
     property int value: 0
     property int mousex

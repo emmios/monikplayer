@@ -1,13 +1,12 @@
 //contents of Control.qml
-import QtQuick 2.9
-
+import QtQuick 2.12
 
 Rectangle {
     id: control
     width: 100
     height: 4
     radius: height
-    color: "transparent"
+    color: "#00000000"
 
     property alias mouse: mouseControl
     property alias bg: bg

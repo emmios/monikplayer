@@ -1,11 +1,11 @@
 //contents of Card.qml
-import QtQuick 2.9
+import QtQuick 2.12
 import QtGraphicalEffects 1.0
 
 Rectangle {
     width: 280
     height: 300
-    color: "transparent"
+    color: "#00000000"
 
     property alias image: icone.source
     property alias bg: bg.color

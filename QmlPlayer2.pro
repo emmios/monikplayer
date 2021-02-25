@@ -1,6 +1,7 @@
 TEMPLATE = app
 
-QT += core qml quick multimedia widgets multimediawidgets x11extras dbus
+# QT += core qml quick multimedia widgets multimediawidgets x11extras dbus
+QT += core qml quick multimedia widgets x11extras dbus
 # widgets multimediawidgets
 CONFIG += c++11
 
@@ -24,7 +25,6 @@ LIBS += -lX11
 CONFIG += "GST_VERSION=1.0"
 PKGCONFIG +=  gstreamer-1.0
 
-INCLUDEPATH = s/usr/include/x86_64-linux-gnu/qt5/
 
 GST_VERSION = 1.0
 #PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer"

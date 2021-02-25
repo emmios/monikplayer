@@ -1,6 +1,5 @@
 #include "imedia.h"
 
-
 void Imedia::media(QString file)
 {
     QMetaObject::invokeMethod(this->main, "imedia",

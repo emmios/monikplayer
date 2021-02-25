@@ -1,8 +1,7 @@
 //contents of App.qml
-import QtQuick 2.9
+import QtQuick 2.12
 import QtQuick.Controls 2.2
 import "./"
-
 
 ApplicationWindow {
     id: main
@@ -14,7 +13,7 @@ ApplicationWindow {
     property alias fontIcons: fontIcons
     property alias focus: wm
 
-    FontLoader { id: fontIcons; name: "Font Awesome 5 Free"; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
+    FontLoader { id: fontIcons; source: "fontawesome-free-5.0.10/web-fonts-with-css/webfonts/fa-regular-400.ttf" }
 
     MouseArea {
         anchors.fill: parent
